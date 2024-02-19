@@ -6,8 +6,21 @@ const {db} = require('./mysql_connect')
 const app = express()
 app.use(cors())
 
-app.get('/', (re,res) =>{
-    return res.json("From Backend Side");
+app.get('/', (req,res) =>{
+    //return res.json("From Backend Side");
+    const sql = "SELECT * FROM Expert ORDER BY RAND() LIMIT 1";
+    db.query(sql, (err, data) => {
+        if (err) {
+            console.error("Error executing query:", err);
+            return res.status(500).json({ error: 'Error executing query' });
+        }
+    const randomExpert = data[0];
+    console.log("randomly selected: " , randomExpert);
+    return res.json(randomExpert);
+
+
+
+})
 })
 
 app.get('/expert', (req, res) => {

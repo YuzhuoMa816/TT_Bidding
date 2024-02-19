@@ -1,0 +1,67 @@
+/* App.css 文件 */
+
+.whole-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh; 
+    padding: 50px;
+  }
+  
+  .left-container {
+    flex: 0.7; 
+  }
+  
+  .right-container {
+    flex:0.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .big-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    padding: 50px;
+    border-radius: 10px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+  }
+  
+  .big-number {
+    font-size: 48px;
+    font-weight: bold;
+    color: #4caf50; /* 绿色 */
+    margin-bottom: 10px;
+  }
+  
+  .expert-info {
+    text-align: center;
+  }
+  
+  .expert-info p {
+    margin: 5px;
+  }
+  
+  .random-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .random-button:hover {
+    background-color: #45a049;
+  }
+
+  .text{
+    font-size: 24px;
+
+  }
+  
