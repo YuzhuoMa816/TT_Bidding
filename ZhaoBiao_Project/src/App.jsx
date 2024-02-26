@@ -1,81 +1,121 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./App.css";
 
 function App() {
-  const [randomExpert, setRandomExpert] = useState(null);
-  const [showTable, setShowTable] = useState(false);
+    const [randomExpert, setRandomExpert] = useState(null);
+    const [showTable, setShowTable] = useState(false);
+    const [selectedMajor, setSelectedMajor] = useState('');
+    const [majorList, setMajorList] = useState([]);
+    const [dataFromNewApp, setDataFromNewApp] = useState(null);
 
-  const fetchRandomExpert = () => {
-    fetch('http://localhost:8080/')
-      .then(res => res.json())
-      .then(data => setRandomExpert(data))
-      .catch(err => console.log(err));
-  };
 
-  const startRandomUpdates = () => {
-    setShowTable(true);
+    const updateDataFromNewApp = (data) => {
+        setDataFromNewApp(data);
+    };
 
-    // 每100毫秒获取一个随机专家，共3秒，即100 * 30 = 3000毫秒 = 3秒
-    const intervalId = setInterval(() => {
-      fetchRandomExpert();
-    }, 100);
 
-    // 3秒后停止更新
-    setTimeout(() => {
-      clearInterval(intervalId);
-    }, 1000);
-  };
+    const fetchRandomExpert = (selectedMajor) => {
+        const url = `http://localhost:8080/expert/?major=${selectedMajor}`;
 
-  const handleRandomButtonClick = () => {
-    // 重置专家信息和状态
-    setRandomExpert(null);
-    setShowTable(false);
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (data !== null) {
+                    setRandomExpert(data);
+                }
+            })
+            .catch(err => console.log(err));
+    };
 
-    // 开始更新
-    startRandomUpdates();
-  };
+    const startRandomUpdates = () => {
+        setShowTable(true);
 
-  useEffect(() => {
-    // 页面加载时获取一次数据
-    fetchRandomExpert();
-  }, []);
+        // 每100毫秒获取一个随机专家，共3秒，即100 * 30 = 3000毫秒 = 3秒
+        const intervalId = setInterval(() => {
+            fetchRandomExpert(selectedMajor);
+        }, 100);
 
-  useEffect(() => {
-    // 在showTable为true时定期获取数据
-    if (showTable) {
-      const intervalId = setInterval(() => {
-        fetchRandomExpert();
-      }, 100);
+        // 3秒后停止更新
+        setTimeout(() => {
+            clearInterval(intervalId);
+            setRandomExpert(prevExpert => prevExpert);
 
-      // 3秒后停止更新，并将randomExpert设置为最后一个刷新的专家信息
-      setTimeout(() => {
-        clearInterval(intervalId);
-        setRandomExpert(prevExpert => prevExpert);
-      }, 3000);
-    }
-  }, [showTable]);
+        }, 3000);
+    };
 
-  return (
-    <div className="whole-container">
-    <div className="left-container">
-      {showTable && randomExpert && (
-        <div className="big-screen">
-          <div className="big-number">
-            {randomExpert.expertName}
-          </div>
-          <div className="expert-info">
-            {/* <p>姓名: {randomExpert.expertName}</p> */}
-            <p className="text">电话: {randomExpert.expertPhone}</p>
-            <p className="text">专业: {randomExpert.expertMajor}</p>
-          </div>
+    const handleRandomButtonClick = () => {
+        // 重置专家信息和状态
+        setRandomExpert(null);
+        setShowTable(false);
+
+        // 开始更新
+        startRandomUpdates();
+    };
+
+
+    const handleMajorChange = (e) => {
+        const selectedValue = e.target.value;
+        setSelectedMajor(selectedValue);
+    };
+
+
+    useEffect(() => {
+        // 获取专业类别列表
+        fetch('http://localhost:8080/majors')
+            .then(res => res.json())
+            .then(data => {
+                // 将专业类别列表设置到状态中
+                setMajorList(data.majors);
+            })
+            .catch(err => console.log(err));
+    }, []);
+
+
+    useEffect(() => {
+        // 在showTable为true时定期获取数据
+        if (showTable) {
+            const intervalId = setInterval(() => {
+                fetchRandomExpert();
+            }, 100);
+
+            // 3秒后停止更新，并将randomExpert设置为最后一个刷新的专家信息
+            setTimeout(() => {
+                clearInterval(intervalId);
+                setRandomExpert(prevExpert => prevExpert);
+            }, 3000);
+        }
+    }, [showTable]);
+
+
+    return (
+        <div className="whole-container">
+            <div className="left-container">
+                <h2>抽取结果：</h2>
+                {showTable && randomExpert && (
+                    <div className="big-screen">
+                        <div className="big-number">
+                            {randomExpert.expertName}
+                        </div>
+                        <div className="expert-info">
+                            {/* <p>姓名: {randomExpert.expertName}</p> */}
+                            <p className="text">电话: {randomExpert.expertPhone}</p>
+                            <p className="text">专业: {randomExpert.expertMajor}</p>
+                        </div>
+                    </div>
+                )}
+            </div>
+            <div className="right-container">
+                <select value={selectedMajor} onChange={handleMajorChange}>
+                    <option value="">随机专业</option>
+                    {majorList.map((major, index) => (
+                        <option key={index} value={major}>{major}</option>
+                    ))}
+                </select>
+
+                <button className="random-button" onClick={handleRandomButtonClick}>随机抽取</button>
+            </div>
         </div>
-      )}
-    </div>
-    <div className="right-container">
-    <button className="random-button" onClick={handleRandomButtonClick}>随机抽取</button>
-    </div>
-    </div>
-  );
+    );
 }
 
 export default App;
