@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import PropTypes from "prop-types";
 
 function NewApp() {
     const [phoneValue, setPhoneInputValue] = useState("");
@@ -64,10 +65,11 @@ function NewApp() {
         navigate(`/${selectedData.expertId}`);
     };
 
-    // const handleSelectPerson = (selectedPerson) => {
-    //     // Handle the selection event
-    //     updateDataFromNewApp(selectedPerson);
-    // };
+    const handleSelectPerson = (selectedPerson) => {
+        // Handle the selection event
+        updateSelectedData(selectedPerson);
+
+    };
 
 
     return (
@@ -138,5 +140,9 @@ function NewApp() {
         </div>
     );
 }
+// Define prop types for NewApp
+NewApp.propTypes = {
+    updateSelectedData: PropTypes.func.isRequired,
+};
 
 export default NewApp;
