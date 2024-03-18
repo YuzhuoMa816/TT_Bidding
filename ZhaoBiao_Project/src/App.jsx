@@ -149,38 +149,49 @@ function App() {
   };
 
   return (
-    <div className="whole-container">
-      <div className="filter-container">
-        <label htmlFor="filter">筛选类型:</label>
-        <select id="filter" value={filterType} onChange={handleFilterChange}>
-          <option value="">全部</option>
-          <option value="经济类">经济类</option>
-          <option value="技术类">技术类</option>
-        </select>
-      </div>
-      <div className="left-container">
-        {showTable && (
-          <div className="big-screen">
-            {isDrawing ? (
-              <div className="big-number">抽取中...</div>
-            ) : randomExpert ? (
-              <>
-                <div className="big-number"> {randomExpert.expertName} </div>
-                <div className="expert-info">
-                  <p className="text">电话: {randomExpert.expertPhone}</p>
-                  <p className="text">专业: {randomExpert.expertMajor}</p>
+    <div className="login-container">
+      <div className="login-content">
+        <h1 className="login-title">辽宁弘利项目管理有限公司专家抽取</h1>
+        <div className="filter-container">
+          <label htmlFor="filter">筛选类型:</label>
+          <select id="filter" value={filterType} onChange={handleFilterChange}>
+            <option value="">全部</option>
+            <option value="经济类">经济类</option>
+            <option value="技术类">技术类</option>
+          </select>
+        </div>
+        <div className="left-container">
+          {showTable && (
+            <div className="big-screen">
+              {isDrawing ? (
+                <div className="loading-spinner">
+                  <div className="spinner"></div>
+                  <div className="big-number">抽取中...</div>
                 </div>
-              </>
-            ) : (
-              <div className="big-number">等待抽取</div>
-            )}
-          </div>
-        )}
-      </div>
-      <div className="right-container">
-        <button className="random-button" onClick={handleRandomButtonClick}>
-          随机抽取
-        </button>
+              ) : randomExpert ? (
+                <React.Fragment>
+                  <div className="big-number animate__animated animate__zoomIn">
+                    {randomExpert.expertName}
+                  </div>
+                  <div className="expert-info animate__animated animate__fadeIn">
+                    <p className="text">电话: {randomExpert.expertPhone}</p>
+                    <p className="text">专业: {randomExpert.expertMajor}</p>
+                  </div>
+                </React.Fragment>
+              ) : (
+                <div className="big-number">等待抽取</div>
+              )}
+            </div>
+          )}
+        </div>
+        <div className="right-container">
+          <button
+            className="random-button animate__animated animate__pulse animate__infinite"
+            onClick={handleRandomButtonClick}
+          >
+            随机抽取
+          </button>
+        </div>
       </div>
     </div>
   );
